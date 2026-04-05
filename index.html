@@ -211,6 +211,49 @@ tr:hover td{background:#161b22}
     <strong>&iquest;Y Am&eacute;rica Latina?</strong>
     <p>No aparece en el golpe directo porque producimos nuestro propio petr&oacute;leo. Pero nos pega por rebote: fertilizantes caros (+20%), inflaci&oacute;n subiendo (6-10%), tasas del Banco de la Rep&uacute;blica en 11-13%, y el peso se deval&uacute;a frente al d&oacute;lar. Todo eso nos afecta aunque estemos al otro lado del mundo.</p>
   </div>
+
+  <h3>Impacto inflacionario estimado en Am&eacute;rica Latina</h3>
+  <p class="narrative">Aunque LatAm no depende de Ormuz para su energ&iacute;a, la crisis le suma entre 0.5 y 3.5 puntos porcentuales de inflaci&oacute;n adicional seg&uacute;n el pa&iacute;s. La primera gr&aacute;fica muestra cu&aacute;nto ten&iacute;a cada pa&iacute;s antes de la crisis (azul), cu&aacute;nto suma el shock con petr&oacute;leo a ~$110 (rojo fuerte) y cu&aacute;nto m&aacute;s si escala a $170+ (rojo claro).</p>
+
+  <div class="chart-container">
+    <div class="chart-title">Inflaci&oacute;n estimada 2026: pre-crisis + impacto Ormuz</div>
+    <div class="chart-subtitle">Puntos porcentuales. Fuentes: Capital Economics, Goldman Sachs, Bloomberg, Allianz</div>
+    <div class="chart-wrap" style="height:340px"><canvas id="cInf1"></canvas></div>
+    <div class="legend">
+      <span><i style="background:#58a6ff"></i>Pre-crisis (proyecci&oacute;n original)</span>
+      <span><i style="background:#f85149"></i>Impacto Ormuz (base ~$110/bbl)</span>
+      <span><i style="background:#ff9b9b"></i>Adicional si escala (~$170/bbl)</span>
+    </div>
+  </div>
+
+  <p class="narrative">La segunda gr&aacute;fica descompone por qu&eacute; canal llega la inflaci&oacute;n. Para Colombia, el canal m&aacute;s grande es alimentos (v&iacute;a fertilizantes caros) &mdash; y es el que golpea directamente al pensionado y a las familias.</p>
+
+  <div class="chart-container">
+    <div class="chart-title">Canales de transmisi&oacute;n inflacionaria por pa&iacute;s</div>
+    <div class="chart-subtitle">Puntos porcentuales adicionales por canal. Escenario base (~$110/bbl)</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="cInf2"></canvas></div>
+    <div class="legend">
+      <span><i style="background:#f85149"></i>Combustibles</span>
+      <span><i style="background:#d29922"></i>Alimentos (v&iacute;a fertilizantes)</span>
+      <span><i style="background:#e3b341"></i>Transporte y log&iacute;stica</span>
+      <span><i style="background:#a371f7"></i>Devaluaci&oacute;n (inflaci&oacute;n importada)</span>
+    </div>
+  </div>
+
+  <div class="info-box danger">
+    <strong>Colombia: el m&aacute;s golpeado de LatAm</strong>
+    <p>Impacto estimado: +1.5 a +3.5 puntos porcentuales adicionales. &iquest;Por qu&eacute;? Porque tiene un amplificador interno que los dem&aacute;s no tienen: el aumento del 23% del salario m&iacute;nimo que ya estaba sumando 1.2 puntos a la inflaci&oacute;n. El shock de Ormuz se monta sobre eso. El gobierno ya subi&oacute; su proyecci&oacute;n de 3.2% a 5.8%, y los analistas la ubican entre 6.2% y 6.5%.</p>
+  </div>
+
+  <div class="info-box warning">
+    <strong>Brasil: contenci&oacute;n con riesgo</strong>
+    <p>Petrobras est&aacute; vendiendo combustible por debajo del precio internacional para contener la inflaci&oacute;n en a&ntilde;o electoral. Pero eso est&aacute; exprimiendo a los importadores y podr&iacute;a causar escasez de di&eacute;sel. Adem&aacute;s, es el mayor importador de fertilizantes del mundo.</p>
+  </div>
+
+  <div class="info-box">
+    <strong>Chile: el importador puro</strong>
+    <p>Importa casi todo su crudo y no tiene mecanismo de subsidio. Goldman subi&oacute; su pron&oacute;stico de inflaci&oacute;n +70 puntos base. Las expectativas de inflaci&oacute;n a 1 a&ntilde;o saltaron 138 puntos base a 3.9%, volando por encima de la meta del 3%.</p>
+  </div>
 </div>
 
 <div class="page-break"></div>
@@ -466,6 +509,13 @@ new Chart(document.getElementById('c11'),{type:'bar',data:{labels:['Ceasefire\nr
 new Chart(document.getElementById('c12'),{type:'doughnut',data:{labels:['NU','Skandia Liq','BTC'],datasets:[{data:[62.4,20.6,17],backgroundColor:['#a371f7','#3fb950','#d29922'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
 
 new Chart(document.getElementById('c13'),{type:'doughnut',data:{labels:['NU','Skandia Liq','Commodities','BTC'],datasets:[{data:[42,25,16,17],backgroundColor:['#a371f7','#3fb950','#f85149','#d29922'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
+
+var gc2=matchMedia('(prefers-color-scheme:dark)').matches?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)';
+var tc2=matchMedia('(prefers-color-scheme:dark)').matches?'#8b949e':'#666';
+
+new Chart(document.getElementById('cInf1'),{type:'bar',data:{labels:['Colombia','Brasil','Chile','M\u00e9xico','Per\u00fa','Argentina'],datasets:[{label:'Pre-crisis',data:[4.5,4.0,2.8,3.8,2.5,23],backgroundColor:'#58a6ff',borderRadius:2},{label:'Impacto Ormuz (base)',data:[2.0,1.5,1.0,0.8,0.7,3],backgroundColor:'#f85149',borderRadius:2},{label:'Adicional si escala',data:[3.5,1.5,1.5,1.0,1.0,4],backgroundColor:'#ff9b9b',borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{color:tc2,font:{size:12}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return v+'%'},color:tc2},grid:{color:gc2}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': +'+c.parsed.y+' pp'}}}}}});
+
+new Chart(document.getElementById('cInf2'),{type:'bar',data:{labels:['Colombia','Brasil','Chile','M\u00e9xico','Per\u00fa','Argentina'],datasets:[{label:'Combustibles',data:[0.4,0.3,0.8,0.3,0.3,0.5],backgroundColor:'#f85149',borderRadius:2},{label:'Alimentos (fertilizantes)',data:[0.8,0.7,0.3,0.3,0.2,1.5],backgroundColor:'#d29922',borderRadius:2},{label:'Transporte y log\u00edstica',data:[0.3,0.2,0.2,0.2,0.1,0.5],backgroundColor:'#e3b341',borderRadius:2},{label:'Devaluaci\u00f3n (importada)',data:[0.5,0.3,0.2,0.2,0.1,0.5],backgroundColor:'#a371f7',borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{color:tc2,font:{size:12}},grid:{display:false}},y:{stacked:true,ticks:{callback:function(v){return '+'+v.toFixed(1)+' pp'},color:tc2},grid:{color:gc2}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.dataset.label+': +'+c.parsed.y.toFixed(1)+' pp'}}}}}});
 </script>
 </body>
 </html>
