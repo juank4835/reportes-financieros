@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Familiar - Crisis del Estrecho de Ormuz</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0d1117;color:#e6edf3;line-height:1.7;padding:0}
+.container{max-width:900px;margin:0 auto;padding:24px 20px}
+.cover{text-align:center;padding:80px 20px 60px}
+.cover h1{font-size:2.4em;font-weight:700;color:#fff;margin-bottom:8px}
+.cover h2{font-size:1.4em;font-weight:400;color:#58a6ff;margin-bottom:16px}
+.cover p{font-size:1em;color:#8b949e}
+.section{margin:48px 0}
+.section h2{font-size:1.6em;font-weight:600;color:#fff;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid #21262d}
+.section h3{font-size:1.2em;font-weight:600;color:#58a6ff;margin:28px 0 8px}
+.narrative{font-size:1em;color:#c9d1d9;margin:12px 0 20px;line-height:1.8}
+.info-box{border-left:4px solid #58a6ff;background:#161b22;padding:16px 20px;border-radius:0 8px 8px 0;margin:20px 0}
+.info-box.warning{border-color:#d29922}
+.info-box.danger{border-color:#f85149}
+.info-box.success{border-color:#3fb950}
+.info-box strong{color:#fff}
+.info-box p{color:#c9d1d9;font-size:0.95em;margin-top:4px}
+.chart-container{position:relative;margin:20px 0;background:#161b22;border-radius:12px;padding:20px;border:1px solid #21262d}
+.chart-title{font-size:1em;font-weight:600;color:#e6edf3;margin-bottom:4px}
+.chart-subtitle{font-size:0.85em;color:#8b949e;margin-bottom:12px}
+.chart-wrap{position:relative;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:0.8em;color:#8b949e}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.9em}
+th{background:#161b22;color:#58a6ff;text-align:left;padding:10px 14px;border-bottom:2px solid #30363d;font-weight:600}
+td{padding:10px 14px;border-bottom:1px solid #21262d;color:#c9d1d9}
+tr:hover td{background:#161b22}
+.highlight-row td{background:#1a1210;color:#f85149;font-weight:500}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.metric{background:#161b22;border-radius:8px;padding:16px;border:1px solid #21262d}
+.metric .label{font-size:0.8em;color:#8b949e}
+.metric .value{font-size:1.8em;font-weight:700;color:#fff;margin-top:2px}
+.metric .detail{font-size:0.75em;color:#8b949e;margin-top:2px}
+.tier{border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid #30363d}
+.tier-title{font-size:1.1em;font-weight:600;margin-bottom:4px}
+.tier-sub{font-size:0.85em;margin-bottom:12px}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.asset-card{background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px}
+.asset-card .name{font-size:0.85em;font-weight:600;color:#e6edf3}
+.asset-card .desc{font-size:0.75em;color:#8b949e;margin-top:3px}
+.asset-card .signal{font-size:1.1em;font-weight:700;margin-top:4px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{font-size:0.8em;min-width:110px;text-align:right;color:#8b949e}
+.bar-track{flex:1;height:22px;border-radius:4px;background:#21262d;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px}
+.bar-fill span{font-size:0.75em;font-weight:600;color:#fff;white-space:nowrap}
+.rank-bar{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.rank-num{font-size:1.4em;font-weight:700;min-width:28px}
+.rank-track{flex:1;height:40px;border-radius:6px;background:#21262d;overflow:hidden}
+.rank-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.rank-fill .rname{font-size:0.9em;font-weight:600;color:#fff}
+.rank-fill .rscore{font-size:0.85em;color:rgba(255,255,255,0.7)}
+.scenario{border:1px solid #30363d;border-radius:12px;padding:16px;margin-bottom:14px;background:#161b22}
+.scenario-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.scenario-title{font-size:1em;font-weight:600;color:#e6edf3}
+.scenario-pct{font-size:1.5em;font-weight:700}
+.scenario-bar{height:6px;border-radius:3px;background:#21262d;margin:8px 0 12px}
+.scenario-desc{font-size:0.85em;color:#8b949e;line-height:1.6}
+.tag{display:inline-block;font-size:0.7em;padding:3px 8px;border-radius:4px;margin:4px 4px 0 0;font-weight:500}
+.page-break{page-break-after:always;border-top:1px solid #21262d;margin:48px 0;padding-top:48px}
+.portfolio-box{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:16px;margin-top:16px}
+.portfolio-box .pb-title{font-size:1em;font-weight:600;color:#e6edf3;margin-bottom:12px}
+.pb-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:6px}
+.pb-item .pb-label{font-size:0.8em;color:#8b949e}
+.pb-item .pb-value{font-size:0.9em;font-weight:600}
+@media print{body{background:#fff;color:#1a1a1a}.cover h1{color:#1a1a1a}.cover h2{color:#2E75B6}.narrative,.info-box p,td,.scenario-desc,.tier-sub,.asset-card .desc,.bar-label,.chart-subtitle{color:#444}.section h2{color:#1a1a1a;border-color:#ddd}.section h3{color:#2E75B6}.chart-container,.metric,.tier,.scenario,.portfolio-box,.asset-card{background:#fafafa;border-color:#ddd}.info-box{background:#f5f8fc}th{background:#f0f0f0;color:#2E75B6}td{border-color:#eee}.bar-track,.rank-track,.scenario-bar{background:#eee}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="cover">
+  <h1>Reporte Familiar</h1>
+  <h2>Crisis del Estrecho de Ormuz</h2>
+  <p>&iquest;Qu&eacute; est&aacute; pasando en el mundo y c&oacute;mo nos afecta?</p>
+  <p style="margin-top:24px;color:#484f58;">5 de abril de 2026 &mdash; Preparado por Juan Camilo</p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 1 -->
+<div class="section">
+  <h2>1. &iquest;Qu&eacute; est&aacute; pasando?</h2>
+  <p class="narrative">Desde el 28 de febrero de 2026, Estados Unidos e Israel lanzaron ataques militares contra Ir&aacute;n. En respuesta, Ir&aacute;n cerr&oacute; el <strong>Estrecho de Ormuz</strong>, una franja de mar de apenas 34 kil&oacute;metros de ancho entre Ir&aacute;n y Om&aacute;n.</p>
+  <p class="narrative">&iquest;Por qu&eacute; importa? Porque por ah&iacute; pasa una parte enorme de los recursos que mueve el mundo. Imagina que es como la puerta principal de un edificio por donde pasan casi todos los residentes. Si alguien la cierra, nadie puede entrar ni salir.</p>
+
+  <div class="grid-2" style="margin:20px 0">
+    <div class="metric"><div class="label">Petr&oacute;leo crudo</div><div class="value">25%</div><div class="detail">del comercio mar&iacute;timo global</div></div>
+    <div class="metric"><div class="label">Gas Natural Licuado</div><div class="value">20%</div><div class="detail">del comercio global de GNL</div></div>
+    <div class="metric"><div class="label">Fertilizantes</div><div class="value">30%</div><div class="detail">del comercio internacional</div></div>
+    <div class="metric"><div class="label">Azufre</div><div class="value">50%</div><div class="detail">del comercio mar&iacute;timo global</div></div>
+  </div>
+
+  <h3>Lo que pasa por Ormuz &mdash; en proporci&oacute;n del total mundial</h3>
+  <p class="narrative">Cada torta muestra qu&eacute; porcentaje de cada recurso mundial transita por este estrecho. Lo que est&aacute; en color es lo que est&aacute; bloqueado. Lo gris es lo que fluye por otras rutas.</p>
+
+  <div class="grid-3">
+    <div class="chart-container">
+      <div class="chart-title">Petr&oacute;leo crudo</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c1"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Gas natural licuado</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c2"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Fertilizantes</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c3"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Azufre</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c4"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Aluminio</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c5"></canvas></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Metanol</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="c6"></canvas></div>
+    </div>
+  </div>
+
+  <div class="info-box danger">
+    <strong>Sin reservas estrat&eacute;gicas</strong>
+    <p>A diferencia del petr&oacute;leo, los fertilizantes, el azufre y el metanol NO tienen reservas estrat&eacute;gicas internacionales. La disrupci&oacute;n es inmediata y sin colch&oacute;n. Eso significa que los precios de los alimentos suben r&aacute;pidamente.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 2 -->
+<div class="section">
+  <h2>2. &iquest;A qui&eacute;n le pega m&aacute;s?</h2>
+  <p class="narrative">No todos los pa&iacute;ses sufren igual. Los que dependen de Ormuz para su energ&iacute;a reciben el golpe de frente. Los dem&aacute;s lo sienten por rebote. Esta gr&aacute;fica muestra qui&eacute;n recibe el petr&oacute;leo que pasa por Ormuz.</p>
+
+  <div class="grid-2">
+    <div class="chart-container">
+      <div class="chart-title">Petr&oacute;leo: qui&eacute;n lo recibe</div>
+      <div class="chart-subtitle">89% va a Asia</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="c7"></canvas></div>
+      <div class="legend">
+        <span><i style="background:#f85149"></i>China 37.7%</span>
+        <span><i style="background:#d29922"></i>India 14.7%</span>
+        <span><i style="background:#e3b341"></i>Corea S. 12%</span>
+        <span><i style="background:#a371f7"></i>Jap&oacute;n 10.9%</span>
+        <span><i style="background:#3fb950"></i>Otros Asia 13.9%</span>
+        <span><i style="background:#58a6ff"></i>Europa 3.8%</span>
+        <span><i style="background:#6e7681"></i>EE.UU. 2.5%</span>
+      </div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Petr&oacute;leo: qui&eacute;n lo exporta</div>
+      <div class="chart-subtitle">20 millones de barriles por d&iacute;a</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="c8"></canvas></div>
+      <div class="legend">
+        <span><i style="background:#3fb950"></i>Arabia S. 37.2%</span>
+        <span><i style="background:#d29922"></i>Iraq 22.8%</span>
+        <span><i style="background:#58a6ff"></i>EAU 12.9%</span>
+        <span><i style="background:#f85149"></i>Ir&aacute;n 10.6%</span>
+        <span><i style="background:#e3b341"></i>Kuwait 10.1%</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Ranking de impacto por continente</h3>
+  <p class="narrative">Ponderamos 4 factores: dependencia energ&eacute;tica directa, exposici&oacute;n a fertilizantes, capacidad fiscal para absorber el golpe, y disponibilidad de alternativas. El puntaje va de 0 (sin impacto) a 100 (impacto m&aacute;ximo).</p>
+
+  <div class="chart-container">
+    <div class="chart-title">Impacto por componente</div>
+    <div class="chart-wrap" style="height:350px"><canvas id="c9"></canvas></div>
+    <div class="legend">
+      <span><i style="background:#f85149"></i>Energ&iacute;a directa</span>
+      <span><i style="background:#d29922"></i>Fertilizantes</span>
+      <span><i style="background:#e3b341"></i>Vulnerabilidad fiscal</span>
+      <span><i style="background:#a371f7"></i>Sin alternativas</span>
+    </div>
+  </div>
+
+  <div style="margin:20px 0">
+    <div class="rank-bar"><div class="rank-num" style="color:#f85149">1</div><div class="rank-track"><div class="rank-fill" style="width:92%;background:#f85149"><span class="rname">Sur y sureste de Asia</span><span class="rscore">92/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#d29922">2</div><div class="rank-track"><div class="rank-fill" style="width:78%;background:#d29922"><span class="rname">&Aacute;frica</span><span class="rscore">78/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#e3b341">3</div><div class="rank-track"><div class="rank-fill" style="width:72%;background:#e3b341"><span class="rname">Asia Oriental</span><span class="rscore">72/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#58a6ff">4</div><div class="rank-track"><div class="rank-fill" style="width:45%;background:#58a6ff"><span class="rname">Europa</span><span class="rscore">45/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#a371f7">5</div><div class="rank-track"><div class="rank-fill" style="width:35%;background:#a371f7"><span class="rname">Am&eacute;rica Latina</span><span class="rscore">35/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#3fb950">6</div><div class="rank-track"><div class="rank-fill" style="width:15%;background:#3fb950"><span class="rname">Norteam&eacute;rica</span><span class="rscore">15/100</span></div></div></div>
+  </div>
+
+  <div class="info-box warning">
+    <strong>&iquest;Por qu&eacute; &Aacute;frica supera a Jap&oacute;n y Corea?</strong>
+    <p>&Aacute;frica depende menos de Ormuz en volumen, pero no tiene ni reservas, ni dinero, ni alternativas para absorber el golpe. Jap&oacute;n y Corea al menos tienen ahorros y capacidad de negociaci&oacute;n. Es el mismo principio del pensionado colombiano: quien menos puede ajustarse, m&aacute;s sufre.</p>
+  </div>
+
+  <div class="info-box">
+    <strong>&iquest;Y Am&eacute;rica Latina?</strong>
+    <p>No aparece en el golpe directo porque producimos nuestro propio petr&oacute;leo. Pero nos pega por rebote: fertilizantes caros (+20%), inflaci&oacute;n subiendo (6-10%), tasas del Banco de la Rep&uacute;blica en 11-13%, y el peso se deval&uacute;a frente al d&oacute;lar. Todo eso nos afecta aunque estemos al otro lado del mundo.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 3 -->
+<div class="section">
+  <h2>3. &iquest;C&oacute;mo nos afecta en la casa?</h2>
+
+  <h3>El efecto en la pensi&oacute;n</h3>
+  <p class="narrative">Si alguien en la familia recibe una pensi&oacute;n en Colombia, la inflaci&oacute;n le quita poder adquisitivo cada mes. La pensi&oacute;n se ajusta una vez al a&ntilde;o con el IPC del a&ntilde;o anterior, pero los precios suben todos los d&iacute;as. Sobre una pensi&oacute;n de $4 millones:</p>
+
+  <table>
+    <tr><th>Escenario</th><th>Inflaci&oacute;n</th><th>P&eacute;rdida/mes</th><th>P&eacute;rdida/a&ntilde;o</th></tr>
+    <tr><td>Crisis corta (se resuelve en Q2)</td><td>6.5%</td><td>$40-60 mil</td><td>$500-700 mil</td></tr>
+    <tr><td>Crisis prolongada (Q3-Q4)</td><td>8-10%</td><td>$120-200 mil</td><td>$1.4-2.4 millones</td></tr>
+    <tr class="highlight-row"><td>Crisis extrema + devaluaci&oacute;n</td><td>12-15%</td><td>$280-400 mil</td><td>$3.4-4.8 millones</td></tr>
+  </table>
+
+  <div class="info-box danger">
+    <strong>La asimetr&iacute;a m&aacute;s cruel</strong>
+    <p>El pensionado paga los precios de hoy con el ajuste del a&ntilde;o pasado. A diferencia de alguien con inversiones que puede mover su dinero, el pensionado no puede ajustar su ingreso. Solo puede recortar gastos. Y ese efecto es acumulativo: si dura dos a&ntilde;os, la p&eacute;rdida se multiplica.</p>
+  </div>
+
+  <h3>Nuestro portafolio: $961,000 d&oacute;lares</h3>
+  <p class="narrative">As&iacute; est&aacute; distribuido nuestro dinero hoy:</p>
+
+  <div class="chart-container">
+    <div class="chart-title">Distribuci&oacute;n actual del portafolio</div>
+    <div class="chart-wrap" style="height:280px"><canvas id="c10"></canvas></div>
+    <div class="legend">
+      <span><i style="background:#a371f7"></i>Nubank 62.4% ($599K)</span>
+      <span><i style="background:#3fb950"></i>Skandia Liquidez USA 20.6% ($198K)</span>
+      <span><i style="background:#d29922"></i>Bitcoin 17% ($164K)</span>
+    </div>
+  </div>
+
+  <p class="narrative"><strong>El problema:</strong> Tener el 62% en Nubank hoy es como tener casi todos los huevos en una sola canasta, y esa canasta est&aacute; en zona de terremoto. Nubank es una empresa excelente (131 millones de clientes, ganancias creciendo 45%), pero en ESTE momento espec&iacute;fico es el tipo de inversi&oacute;n que m&aacute;s sufre:</p>
+
+  <table>
+    <tr><th>Factor</th><th>Qu&eacute; pasa</th><th>Efecto en Nubank</th></tr>
+    <tr><td>Tasas de inter&eacute;s</td><td>Brasil: 14.75%, Colombia: 11.25%</td><td>Cr&eacute;dito m&aacute;s caro, clientes dejan de pagar</td></tr>
+    <tr><td>Moneda</td><td>Real y peso se deval&uacute;an vs d&oacute;lar</td><td>Ingresos reportados bajan</td></tr>
+    <tr><td>Fertilizantes</td><td>+20% por cierre de Ormuz</td><td>Comida cara, menos dinero, m&aacute;s morosidad</td></tr>
+    <tr><td>Acci&oacute;n</td><td>De $18.76 (enero) a $14.16 (hoy)</td><td>Ya cay&oacute; 24% y puede bajar m&aacute;s</td></tr>
+  </table>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 4 -->
+<div class="section">
+  <h2>4. &iquest;Qu&eacute; tipos de inversiones convienen ahora?</h2>
+  <p class="narrative">No todos los activos se comportan igual en una crisis. Algunos suben, otros bajan, y otros dependen del timing. Esta clasificaci&oacute;n muestra cu&aacute;les se benefician y cu&aacute;les sufren si la guerra escala.</p>
+
+  <div class="tier" style="border-color:#3fb950">
+    <div class="tier-title" style="color:#3fb950">Tier 1 &mdash; Suben directamente con la crisis</div>
+    <div class="tier-sub" style="color:#8b949e">Se benefician del cierre de Ormuz, la inflaci&oacute;n y la incertidumbre</div>
+    <div class="asset-grid">
+      <div class="asset-card"><div class="name">Oro</div><div class="desc">Refugio cl&aacute;sico. Sube con inflaci&oacute;n e incertidumbre.</div><div class="signal" style="color:#3fb950">&uarr;&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Petr&oacute;leo y gas</div><div class="desc">Beneficiario directo del cierre de Ormuz.</div><div class="signal" style="color:#3fb950">&uarr;&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Commodities agr&iacute;colas</div><div class="desc">Trigo, ma&iacute;z, soya. Fertilizantes caros suben todo.</div><div class="signal" style="color:#3fb950">&uarr;&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Acciones de defensa</div><div class="desc">LMT, RTX, NOC. Gasto militar se dispara.</div><div class="signal" style="color:#3fb950">&uarr;&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Productores energ&iacute;a</div><div class="desc">ExxonMobil, Chevron. M&aacute;rgenes r&eacute;cord.</div><div class="signal" style="color:#3fb950">&uarr;&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">D&oacute;lar (USD)</div><div class="desc">Refugio global. Se fortalece vs todo.</div><div class="signal" style="color:#3fb950">&uarr;&uarr;</div></div>
+    </div>
+  </div>
+
+  <div class="tier" style="border-color:#58a6ff">
+    <div class="tier-title" style="color:#58a6ff">Tier 2 &mdash; Se benefician si los bancos centrales imprimen dinero</div>
+    <div class="tier-sub" style="color:#8b949e">Suben en segunda derivada, cuando los gobiernos responden a la crisis</div>
+    <div class="asset-grid">
+      <div class="asset-card"><div class="name">Bitcoin</div><div class="desc">Baja primero (risk-off). Sube despu&eacute;s si hay impresi&oacute;n monetaria.</div><div class="signal" style="color:#58a6ff">&darr; luego &uarr;&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Plata</div><div class="desc">Refugio + metal industrial. Doble filo.</div><div class="signal" style="color:#58a6ff">&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">TIPS</div><div class="desc">Bonos indexados a inflaci&oacute;n. Protegen poder adquisitivo.</div><div class="signal" style="color:#58a6ff">&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Uranio / Nuclear</div><div class="desc">Crisis acelera transici&oacute;n energ&eacute;tica.</div><div class="signal" style="color:#58a6ff">&uarr;&uarr;</div></div>
+      <div class="asset-card"><div class="name">Finca ra&iacute;z</div><div class="desc">Activo tangible. Se aprecia con inflaci&oacute;n.</div><div class="signal" style="color:#58a6ff">&uarr;</div></div>
+    </div>
+  </div>
+
+  <div class="tier" style="border-color:#6e7681">
+    <div class="tier-title" style="color:#8b949e">Tier 3 &mdash; Neutrales / depende del timing</div>
+    <div class="tier-sub" style="color:#8b949e">Pueden ir en cualquier direcci&oacute;n</div>
+    <div class="asset-grid">
+      <div class="asset-card"><div class="name">Renta fija corta USD</div><div class="desc">Preserva capital en d&oacute;lares. Nuestro Skandia Liquidez USA.</div><div class="signal" style="color:#8b949e">&rarr;</div></div>
+      <div class="asset-card"><div class="name">Treasuries largo plazo</div><div class="desc">Refugio si hay recesi&oacute;n. Pierden si inflaci&oacute;n sube.</div><div class="signal" style="color:#8b949e">&harr;</div></div>
+      <div class="asset-card"><div class="name">Cash (pesos COP)</div><div class="desc">Pierde valor con inflaci&oacute;n, pero da flexibilidad.</div><div class="signal" style="color:#f85149">&darr;</div></div>
+    </div>
+  </div>
+
+  <div class="tier" style="border-color:#f85149">
+    <div class="tier-title" style="color:#f85149">Tier 4 &mdash; Los que m&aacute;s sufren si escala</div>
+    <div class="tier-sub" style="color:#8b949e">Triple exposici&oacute;n negativa: equity + emergente + consumo</div>
+    <div class="asset-grid">
+      <div class="asset-card"><div class="name">Fintechs LatAm (NU)</div><div class="desc">Tasas suben, morosidad sube, moneda se deval&uacute;a.</div><div class="signal" style="color:#f85149">&darr;&darr;&darr;</div></div>
+      <div class="asset-card"><div class="name">Aerol&iacute;neas</div><div class="desc">Combustible es su mayor costo.</div><div class="signal" style="color:#f85149">&darr;&darr;&darr;</div></div>
+      <div class="asset-card"><div class="name">Consumo discrecional</div><div class="desc">La gente gasta en gasolina, no en lujos.</div><div class="signal" style="color:#f85149">&darr;&darr;</div></div>
+      <div class="asset-card"><div class="name">Growth stocks / tech</div><div class="desc">Tasas suben, m&uacute;ltiplos se comprimen.</div><div class="signal" style="color:#f85149">&darr;&darr;</div></div>
+      <div class="asset-card"><div class="name">Monedas emergentes</div><div class="desc">COP, BRL, MXN. Capital huye a USD.</div><div class="signal" style="color:#f85149">&darr;&darr;</div></div>
+    </div>
+  </div>
+
+  <div class="portfolio-box">
+    <div class="pb-title">Nuestro portafolio en este mapa</div>
+    <div class="pb-item" style="border:1px solid #f85149;border-radius:8px"><div><div class="pb-label">NU (62.4%)</div><div class="pb-value" style="color:#f85149">Tier 4 &mdash; M&aacute;ximo riesgo</div></div></div>
+    <div class="pb-item" style="border:1px solid #6e7681;border-radius:8px"><div><div class="pb-label">Skandia Liquidez USA (20.6%)</div><div class="pb-value" style="color:#8b949e">Tier 3 &mdash; Preserva</div></div></div>
+    <div class="pb-item" style="border:1px solid #58a6ff;border-radius:8px"><div><div class="pb-label">Bitcoin (17%)</div><div class="pb-value" style="color:#58a6ff">Tier 2 &mdash; Baja y luego sube</div></div></div>
+    <p style="font-size:0.85em;color:#8b949e;margin-top:12px">62% del portafolio est&aacute; en Tier 4 (lo que m&aacute;s baja). 0% en Tier 1 (lo que m&aacute;s sube). La rotaci&oacute;n propuesta busca corregir ese desequilibrio.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 5 -->
+<div class="section">
+  <h2>5. &iquest;Qu&eacute; tan probable es que empeore?</h2>
+  <p class="narrative">Basado en la situaci&oacute;n al 5 de abril de 2026, d&iacute;a 36 de la guerra. El 6 de abril (ma&ntilde;ana) vence el ultim&aacute;tum de Trump a Ir&aacute;n.</p>
+
+  <div class="scenario">
+    <div class="scenario-header"><div class="scenario-title">A. Se resuelve r&aacute;pido (ceasefire)</div><div class="scenario-pct" style="color:#3fb950">20%</div></div>
+    <div class="scenario-bar"><div style="width:20%;height:100%;background:#3fb950;border-radius:3px"></div></div>
+    <div class="scenario-desc">Trump exige Ormuz abierto. Ir&aacute;n exige soberan&iacute;a sobre el estrecho. Las posiciones son incompatibles. El protocolo Ir&aacute;n-Om&aacute;n es positivo pero no es un ceasefire.</div>
+    <div style="margin-top:8px"><span class="tag" style="background:#1a3a1a;color:#3fb950">Petr&oacute;leo baja a $80-90</span><span class="tag" style="background:#1a3a1a;color:#3fb950">NU rebota</span></div>
+  </div>
+
+  <div class="scenario" style="border-color:#d29922">
+    <div class="scenario-header"><div class="scenario-title">B. Guerra cr&oacute;nica sin escalada (status quo)</div><div class="scenario-pct" style="color:#d29922">40%</div></div>
+    <div class="scenario-bar"><div style="width:40%;height:100%;background:#d29922;border-radius:3px"></div></div>
+    <div class="scenario-desc">El m&aacute;s probable. EE.UU. sigue bombardeando, Ir&aacute;n mantiene Ormuz cerrado selectivamente (deja pasar a China, India, Rusia). No hay ceasefire pero tampoco gran escalada. El peor escenario para la econom&iacute;a: sangrado lento sin resoluci&oacute;n.</div>
+    <div style="margin-top:8px"><span class="tag" style="background:#2a2010;color:#d29922">Petr&oacute;leo $100-130</span><span class="tag" style="background:#2a1010;color:#f85149">NU sigue bajando</span><span class="tag" style="background:#1a3a1a;color:#3fb950">Commodities suben</span></div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header"><div class="scenario-title">C. Escalada: atacan infraestructura energ&eacute;tica</div><div class="scenario-pct" style="color:#d29922">25%</div></div>
+    <div class="scenario-bar"><div style="width:25%;height:100%;background:#d29922;border-radius:3px"></div></div>
+    <div class="scenario-desc">Trump cumple amenaza y ataca plantas el&eacute;ctricas. Ir&aacute;n mina todo el Golfo. Los Houthis bloquean el Mar Rojo. Doble bloqueo: Ormuz + Bab al-Mandab. Petr&oacute;leo a $170+. Crisis energ&eacute;tica como en los a&ntilde;os 70.</div>
+    <div style="margin-top:8px"><span class="tag" style="background:#2a1010;color:#f85149">Petr&oacute;leo $150-200</span><span class="tag" style="background:#2a1010;color:#f85149">NU colapsa a $8-10</span><span class="tag" style="background:#1a3a1a;color:#3fb950">Oro se dispara</span></div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header"><div class="scenario-title">D. Conflicto regional total</div><div class="scenario-pct" style="color:#f85149">10%</div></div>
+    <div class="scenario-bar"><div style="width:10%;height:100%;background:#f85149;border-radius:3px"></div></div>
+    <div class="scenario-desc">Ir&aacute;n activa todos los frentes. Turqu&iacute;a activa art&iacute;culo 5 de la OTAN. Tropas terrestres entran a Ir&aacute;n. China y Rusia intervienen. Crash de mercados global.</div>
+    <div style="margin-top:8px"><span class="tag" style="background:#2a1010;color:#f85149">Petr&oacute;leo $200+</span><span class="tag" style="background:#2a1010;color:#f85149">Mercados: crash global</span></div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header"><div class="scenario-title">E. Colapso interno de Ir&aacute;n</div><div class="scenario-pct" style="color:#a371f7">5%</div></div>
+    <div class="scenario-bar"><div style="width:5%;height:100%;background:#a371f7;border-radius:3px"></div></div>
+    <div class="scenario-desc">El nuevo l&iacute;der supremo pierde control. R&eacute;gimen se fragmenta. Ormuz se abre eventualmente. Poco probable a corto plazo.</div>
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-title">Resumen de probabilidades</div>
+    <div class="chart-wrap" style="height:280px"><canvas id="c11"></canvas></div>
+  </div>
+
+  <div class="info-box danger">
+    <strong>75% de probabilidad de que NO se resuelva pronto</strong>
+    <p>Sumando el status quo prolongado (40%) y los escenarios de escalada (35%), hay un 75% de probabilidad de que esta situaci&oacute;n contin&uacute;e o empeore. Solo hay un 25% de que se resuelva r&aacute;pidamente. Por eso tiene sentido diversificar ahora.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 6 -->
+<div class="section">
+  <h2>6. &iquest;Qu&eacute; proponemos hacer?</h2>
+
+  <p class="narrative">La idea no es vender todo ni entrar en p&aacute;nico. Es reducir la concentraci&oacute;n en Nubank y mover parte a inversiones que se benefician de esta crisis o al menos la aguanten mejor. Todo gradualmente, sin movimientos bruscos.</p>
+
+  <h3>La estrategia: DCA (Dollar Cost Averaging)</h3>
+  <p class="narrative">En vez de vender un bloque grande de Nubank de un golpe, hacemos ventas graduales semanales y vamos rotando el dinero:</p>
+
+  <table>
+    <tr><th>Paso</th><th>Qu&eacute; hacemos</th><th>Por qu&eacute;</th></tr>
+    <tr><td>1</td><td>Vender $150-200K de NU en 10 tramos semanales (~$15-20K/semana)</td><td>Promediamos el precio de venta. No vendemos todo en el peor momento.</td></tr>
+    <tr><td>2</td><td>Mover parte a Skandia Commodities</td><td>Invierte en petr&oacute;leo, oro, trigo &mdash; lo que sube con la crisis.</td></tr>
+    <tr><td>3</td><td>Mover parte a Skandia Liquidez USA</td><td>Es como tener d&oacute;lares. Si el peso se deval&uacute;a, esta inversi&oacute;n sube.</td></tr>
+  </table>
+
+  <h3>C&oacute;mo quedar&iacute;a el portafolio</h3>
+
+  <div class="grid-2">
+    <div class="chart-container">
+      <div class="chart-title">Hoy</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="c12"></canvas></div>
+      <div class="legend">
+        <span><i style="background:#a371f7"></i>NU 62.4%</span>
+        <span><i style="background:#3fb950"></i>Skandia Liq 20.6%</span>
+        <span><i style="background:#d29922"></i>BTC 17%</span>
+      </div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title">Despu&eacute;s de la rotaci&oacute;n</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="c13"></canvas></div>
+      <div class="legend">
+        <span><i style="background:#a371f7"></i>NU ~42%</span>
+        <span><i style="background:#3fb950"></i>Skandia Liq ~25%</span>
+        <span><i style="background:#f85149"></i>Commodities ~16%</span>
+        <span><i style="background:#d29922"></i>BTC 17%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box success">
+    <strong>En palabras simples</strong>
+    <p>Pasamos de tener casi todo en una sola acci&oacute;n que sufre con la crisis, a tener una mezcla que incluye cosas que SUBEN con la crisis (commodities) y cosas que nos PROTEGEN de la devaluaci&oacute;n (d&oacute;lares). Sin vender todo ni entrar en p&aacute;nico.</p>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 7 -->
+<div class="section">
+  <h2>7. Resumen</h2>
+  <p class="narrative">Este reporte no es para generar p&aacute;nico. Es para entender qu&eacute; est&aacute; pasando y tomar decisiones informadas.</p>
+
+  <div class="grid-2" style="margin:20px 0">
+    <div class="metric" style="border-left:4px solid #f85149"><div class="label">Ormuz cerrado desde</div><div class="value" style="font-size:1.4em">28 feb 2026</div><div class="detail">36 d&iacute;as y contando</div></div>
+    <div class="metric" style="border-left:4px solid #d29922"><div class="label">Petr&oacute;leo Brent</div><div class="value" style="font-size:1.4em">$109/barril</div><div class="detail">Estaba en $71 antes de la guerra (+40%)</div></div>
+    <div class="metric" style="border-left:4px solid #a371f7"><div class="label">Nubank (NU)</div><div class="value" style="font-size:1.4em">$14.16</div><div class="detail">Estaba en $18.76 en enero (-24%)</div></div>
+    <div class="metric" style="border-left:4px solid #58a6ff"><div class="label">Bitcoin</div><div class="value" style="font-size:1.4em">$67,300</div><div class="detail">M&aacute;ximo hist&oacute;rico: $126,300 (-47%)</div></div>
+    <div class="metric" style="border-left:4px solid #3fb950"><div class="label">Inflaci&oacute;n Colombia</div><div class="value" style="font-size:1.4em">5.3% &rarr; 6-10%</div><div class="detail">Meta del BanRep: 3%. Lejos.</div></div>
+    <div class="metric" style="border-left:4px solid #d29922"><div class="label">Prob. de que NO se resuelva pronto</div><div class="value" style="font-size:1.4em">75%</div><div class="detail">Status quo + escalada</div></div>
+  </div>
+
+  <p class="narrative" style="margin-top:24px;font-size:0.9em;color:#8b949e;text-align:center;border-top:1px solid #21262d;padding-top:24px"><em>Nota: Este reporte es un an&aacute;lisis personal para uso familiar. No constituye asesor&iacute;a financiera profesional. Cualquier decisi&oacute;n de inversi&oacute;n debe consultarse con un asesor financiero certificado.</em></p>
+</div>
+
+</div>
+
+<script>
+function doughnut(id,pct,color){
+  new Chart(document.getElementById(id),{type:'doughnut',data:{labels:['V\u00eda Ormuz','Otras rutas'],datasets:[{data:[pct,100-pct],backgroundColor:[color,'#21262d'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+c.parsed+'%'}}}},plugins:[{id:'ct',afterDraw(chart){const{ctx,chartArea:{left,right,top,bottom}}=chart;const cx=(left+right)/2,cy=(top+bottom)/2;ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 24px system-ui';ctx.fillStyle='#e6edf3';ctx.fillText(pct+'%',cx,cy);ctx.restore()}}]});
+}
+doughnut('c1',25,'#f85149');
+doughnut('c2',20,'#d29922');
+doughnut('c3',30,'#3fb950');
+doughnut('c4',50,'#a371f7');
+doughnut('c5',20,'#58a6ff');
+doughnut('c6',33,'#e091b5');
+
+new Chart(document.getElementById('c7'),{type:'doughnut',data:{labels:['China','India','Corea S.','Jap\u00f3n','Otros Asia','Europa','EE.UU.','Otros'],datasets:[{data:[37.7,14.7,12,10.9,13.9,3.8,2.5,4.5],backgroundColor:['#f85149','#d29922','#e3b341','#a371f7','#3fb950','#58a6ff','#6e7681','#484f58'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'50%',plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('c8'),{type:'doughnut',data:{labels:['Arabia Saudita','Iraq','EAU','Ir\u00e1n','Kuwait','Otros'],datasets:[{data:[37.2,22.8,12.9,10.6,10.1,6.4],backgroundColor:['#3fb950','#d29922','#58a6ff','#f85149','#e3b341','#484f58'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'50%',plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('c9'),{type:'bar',data:{labels:['Sur/SE Asia','\u00c1frica','Asia Oriental','Europa','Am. Latina','Norteam.'],datasets:[{label:'Energ\u00eda directa',data:[35,15,28,8,2,3],backgroundColor:'#f85149'},{label:'Fertilizantes',data:[20,30,12,10,12,2],backgroundColor:'#d29922'},{label:'Vulnerabilidad fiscal',data:[22,28,12,12,15,3],backgroundColor:'#e3b341'},{label:'Sin alternativas',data:[15,5,20,15,6,7],backgroundColor:'#a371f7'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{color:'#8b949e',font:{size:11}},grid:{display:false}},y:{stacked:true,max:100,ticks:{color:'#8b949e'},grid:{color:'rgba(255,255,255,0.06)'}}},plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('c10'),{type:'doughnut',data:{labels:['Nubank (NU)','Skandia Liquidez USA','Bitcoin (BTC)'],datasets:[{data:[62.4,20.6,17],backgroundColor:['#a371f7','#3fb950','#d29922'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}},plugins:[{id:'ct2',afterDraw(chart){const{ctx,chartArea:{left,right,top,bottom}}=chart;const cx=(left+right)/2,cy=(top+bottom)/2;ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 20px system-ui';ctx.fillStyle='#e6edf3';ctx.fillText('$961K',cx,cy);ctx.restore()}}]});
+
+new Chart(document.getElementById('c11'),{type:'bar',data:{labels:['Ceasefire\nr\u00e1pido','Guerra\ncr\u00f3nica','Escalada\nenerg\u00e9tica','Conflicto\nregional','Colapso\ninterno'],datasets:[{data:[20,40,25,10,5],backgroundColor:['#3fb950','#d29922','#d29922','#f85149','#a371f7'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{max:50,ticks:{callback:v=>v+'%',color:'#8b949e'},grid:{color:'rgba(255,255,255,0.06)'}},y:{ticks:{color:'#c9d1d9',font:{size:11}},grid:{display:false}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x+'%'}}}}});
+
+new Chart(document.getElementById('c12'),{type:'doughnut',data:{labels:['NU','Skandia Liq','BTC'],datasets:[{data:[62.4,20.6,17],backgroundColor:['#a371f7','#3fb950','#d29922'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('c13'),{type:'doughnut',data:{labels:['NU','Skandia Liq','Commodities','BTC'],datasets:[{data:[42,25,16,17],backgroundColor:['#a371f7','#3fb950','#f85149','#d29922'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
+</script>
+</body>
+</html>
