@@ -173,8 +173,8 @@ tr:hover td{background:#161b22}
     </div>
   </div>
 
-  <h3>Ranking de impacto por continente</h3>
-  <p class="narrative">Ponderamos 4 factores: dependencia energ&eacute;tica directa, exposici&oacute;n a fertilizantes, capacidad fiscal para absorber el golpe, y disponibilidad de alternativas. El puntaje va de 0 (sin impacto) a 100 (impacto m&aacute;ximo).</p>
+  <h3>Ranking de impacto por regi&oacute;n</h3>
+  <p class="narrative">Ponderamos 4 factores: dependencia energ&eacute;tica directa, exposici&oacute;n a fertilizantes, capacidad fiscal para absorber el golpe, y disponibilidad de alternativas. El puntaje va de 0 (sin impacto) a 100 (impacto m&aacute;ximo). Los pa&iacute;ses del Golfo P&eacute;rsico encabezan la lista porque est&aacute;n literalmente dentro de la zona de guerra.</p>
 
   <div class="chart-container">
     <div class="chart-title">Impacto por componente</div>
@@ -188,12 +188,18 @@ tr:hover td{background:#161b22}
   </div>
 
   <div style="margin:20px 0">
-    <div class="rank-bar"><div class="rank-num" style="color:#f85149">1</div><div class="rank-track"><div class="rank-fill" style="width:92%;background:#f85149"><span class="rname">Sur y sureste de Asia</span><span class="rscore">92/100</span></div></div></div>
-    <div class="rank-bar"><div class="rank-num" style="color:#d29922">2</div><div class="rank-track"><div class="rank-fill" style="width:78%;background:#d29922"><span class="rname">&Aacute;frica</span><span class="rscore">78/100</span></div></div></div>
-    <div class="rank-bar"><div class="rank-num" style="color:#e3b341">3</div><div class="rank-track"><div class="rank-fill" style="width:72%;background:#e3b341"><span class="rname">Asia Oriental</span><span class="rscore">72/100</span></div></div></div>
-    <div class="rank-bar"><div class="rank-num" style="color:#58a6ff">4</div><div class="rank-track"><div class="rank-fill" style="width:45%;background:#58a6ff"><span class="rname">Europa</span><span class="rscore">45/100</span></div></div></div>
-    <div class="rank-bar"><div class="rank-num" style="color:#a371f7">5</div><div class="rank-track"><div class="rank-fill" style="width:35%;background:#a371f7"><span class="rname">Am&eacute;rica Latina</span><span class="rscore">35/100</span></div></div></div>
-    <div class="rank-bar"><div class="rank-num" style="color:#3fb950">6</div><div class="rank-track"><div class="rank-fill" style="width:15%;background:#3fb950"><span class="rname">Norteam&eacute;rica</span><span class="rscore">15/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#ff6b6b">1</div><div class="rank-track"><div class="rank-fill" style="width:98%;background:linear-gradient(90deg,#f85149,#ff6b6b)"><span class="rname">Medio Oriente / Golfo P&eacute;rsico</span><span class="rscore">98/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#f85149">2</div><div class="rank-track"><div class="rank-fill" style="width:92%;background:#f85149"><span class="rname">Sur y sureste de Asia</span><span class="rscore">92/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#d29922">3</div><div class="rank-track"><div class="rank-fill" style="width:78%;background:#d29922"><span class="rname">&Aacute;frica</span><span class="rscore">78/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#e3b341">4</div><div class="rank-track"><div class="rank-fill" style="width:72%;background:#e3b341"><span class="rname">Asia Oriental</span><span class="rscore">72/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#58a6ff">5</div><div class="rank-track"><div class="rank-fill" style="width:45%;background:#58a6ff"><span class="rname">Europa</span><span class="rscore">45/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#a371f7">6</div><div class="rank-track"><div class="rank-fill" style="width:35%;background:#a371f7"><span class="rname">Am&eacute;rica Latina</span><span class="rscore">35/100</span></div></div></div>
+    <div class="rank-bar"><div class="rank-num" style="color:#3fb950">7</div><div class="rank-track"><div class="rank-fill" style="width:15%;background:#3fb950"><span class="rname">Norteam&eacute;rica</span><span class="rscore">15/100</span></div></div></div>
+  </div>
+
+  <div class="info-box danger">
+    <strong>&iquest;Por qu&eacute; Medio Oriente es el #1?</strong>
+    <p>Los pa&iacute;ses del Golfo P&eacute;rsico est&aacute;n DENTRO del terremoto. Iraq, Kuwait, Bahrain y Qatar tienen a Ormuz como su &uacute;nica salida mar&iacute;tima. Iraq ya est&aacute; cerrando campos petroleros porque no puede exportar su crudo. Las instalaciones de GNL de Qatar fueron atacadas por drones iran&iacute;es. Arabia Saudita y EAU tienen algunos oleoductos alternativos, pero con capacidad limitada. Su econom&iacute;a, su infraestructura y su poblaci&oacute;n est&aacute;n en la zona de guerra.</p>
   </div>
 
   <div class="info-box warning">
@@ -451,7 +457,7 @@ new Chart(document.getElementById('c7'),{type:'doughnut',data:{labels:['China','
 
 new Chart(document.getElementById('c8'),{type:'doughnut',data:{labels:['Arabia Saudita','Iraq','EAU','Ir\u00e1n','Kuwait','Otros'],datasets:[{data:[37.2,22.8,12.9,10.6,10.1,6.4],backgroundColor:['#3fb950','#d29922','#58a6ff','#f85149','#e3b341','#484f58'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'50%',plugins:{legend:{display:false}}}});
 
-new Chart(document.getElementById('c9'),{type:'bar',data:{labels:['Sur/SE Asia','\u00c1frica','Asia Oriental','Europa','Am. Latina','Norteam.'],datasets:[{label:'Energ\u00eda directa',data:[35,15,28,8,2,3],backgroundColor:'#f85149'},{label:'Fertilizantes',data:[20,30,12,10,12,2],backgroundColor:'#d29922'},{label:'Vulnerabilidad fiscal',data:[22,28,12,12,15,3],backgroundColor:'#e3b341'},{label:'Sin alternativas',data:[15,5,20,15,6,7],backgroundColor:'#a371f7'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{color:'#8b949e',font:{size:11}},grid:{display:false}},y:{stacked:true,max:100,ticks:{color:'#8b949e'},grid:{color:'rgba(255,255,255,0.06)'}}},plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('c9'),{type:'bar',data:{labels:['Medio Oriente','Sur/SE Asia','\u00c1frica','Asia Oriental','Europa','Am. Latina','Norteam.'],datasets:[{label:'Energ\u00eda directa',data:[40,35,15,28,8,2,3],backgroundColor:'#f85149'},{label:'Fertilizantes',data:[25,20,30,12,10,12,2],backgroundColor:'#d29922'},{label:'Vulnerabilidad fiscal',data:[8,22,28,12,12,15,3],backgroundColor:'#e3b341'},{label:'Sin alternativas',data:[25,15,5,20,15,6,7],backgroundColor:'#a371f7'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true,ticks:{color:'#8b949e',font:{size:10}},grid:{display:false}},y:{stacked:true,max:100,ticks:{color:'#8b949e'},grid:{color:'rgba(255,255,255,0.06)'}}},plugins:{legend:{display:false}}}});
 
 new Chart(document.getElementById('c10'),{type:'doughnut',data:{labels:['Nubank (NU)','Skandia Liquidez USA','Bitcoin (BTC)'],datasets:[{data:[62.4,20.6,17],backgroundColor:['#a371f7','#3fb950','#d29922'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}},plugins:[{id:'ct2',afterDraw(chart){const{ctx,chartArea:{left,right,top,bottom}}=chart;const cx=(left+right)/2,cy=(top+bottom)/2;ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 20px system-ui';ctx.fillStyle='#e6edf3';ctx.fillText('$961K',cx,cy);ctx.restore()}}]});
 
