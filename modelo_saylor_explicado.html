@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El modelo Saylor explicado · STRC y Bitcoin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #262624;
+  color: #E8E6E0;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  font-size: 17px;
+}
+.container { max-width: 920px; margin: 0 auto; padding: 60px 32px; }
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #FF8C1A;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 56px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #F5F3ED;
+  margin-bottom: 32px;
+}
+h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #F5F3ED;
+  margin: 80px 0 24px;
+}
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #F5F3ED;
+  margin: 40px 0 16px;
+  letter-spacing: -0.005em;
+}
+p { margin-bottom: 20px; color: #C8C5BD; }
+strong { color: #F5F3ED; font-weight: 500; }
+em { color: #FF8C1A; font-style: normal; font-weight: 400; }
+
+.meta-bar {
+  display: flex;
+  gap: 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #888;
+  padding: 16px 0;
+  border-top: 1px solid #3a3a37;
+  border-bottom: 1px solid #3a3a37;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+.meta-bar span { display: flex; align-items: center; gap: 8px; }
+.meta-bar .dot { width: 6px; height: 6px; background: #FF8C1A; border-radius: 50%; }
+
+.divider {
+  height: 2px;
+  background: linear-gradient(90deg, #FF8C1A 0%, transparent 100%);
+  margin: 64px 0;
+  border: none;
+}
+
+.lead {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #E8E6E0;
+  margin-bottom: 40px;
+  font-style: italic;
+}
+
+.callout {
+  background: rgba(255, 140, 26, 0.08);
+  border-left: 3px solid #FF8C1A;
+  padding: 24px 28px;
+  margin: 32px 0;
+  border-radius: 0 8px 8px 0;
+}
+.callout p:last-child { margin-bottom: 0; }
+.callout-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #FF8C1A;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.warning {
+  background: rgba(220, 80, 80, 0.06);
+  border-left: 3px solid #DC5050;
+  padding: 24px 28px;
+  margin: 32px 0;
+  border-radius: 0 8px 8px 0;
+}
+.warning .callout-label { color: #DC5050; }
+
+.success {
+  background: rgba(80, 200, 140, 0.06);
+  border-left: 3px solid #50C88C;
+  padding: 24px 28px;
+  margin: 32px 0;
+  border-radius: 0 8px 8px 0;
+}
+.success .callout-label { color: #50C88C; }
+
+.numbered {
+  display: flex;
+  gap: 20px;
+  margin: 32px 0;
+  align-items: flex-start;
+}
+.num-badge {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C1A 0%, #E07418 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a18;
+}
+.num-content { flex: 1; }
+.num-content h4 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  color: #F5F3ED;
+  margin-bottom: 6px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 40px 0;
+}
+.metric {
+  background: #2D2D2A;
+  border: 1px solid #3a3a37;
+  border-radius: 12px;
+  padding: 24px;
+}
+.metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.metric-value {
+  font-family: 'Fraunces', serif;
+  font-size: 38px;
+  font-weight: 500;
+  color: #F5F3ED;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.metric-sub {
+  font-size: 13px;
+  color: #888;
+}
+.metric.highlight .metric-value { color: #FF8C1A; }
+.metric.danger .metric-value { color: #DC5050; }
+.metric.success .metric-value { color: #50C88C; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 32px 0;
+  font-size: 15px;
+  background: #2D2D2A;
+  border-radius: 12px;
+  overflow: hidden;
+}
+th {
+  background: #1f1f1d;
+  padding: 14px 18px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #FF8C1A;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-bottom: 1px solid #3a3a37;
+}
+td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #3a3a37;
+  color: #C8C5BD;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255, 140, 26, 0.03); }
+td.num { font-family: 'JetBrains Mono', monospace; text-align: right; }
+td.good { color: #50C88C; }
+td.bad { color: #DC5050; }
+td.warn { color: #FFB84A; }
+
+.svg-container {
+  margin: 40px 0;
+  background: #1f1f1d;
+  border-radius: 16px;
+  padding: 32px;
+  border: 1px solid #3a3a37;
+}
+.svg-container svg { width: 100%; height: auto; display: block; }
+.svg-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  margin-top: 16px;
+  letter-spacing: 0.05em;
+}
+
+.formula {
+  font-family: 'JetBrains Mono', monospace;
+  background: #1f1f1d;
+  padding: 20px 28px;
+  border-radius: 8px;
+  margin: 24px 0;
+  font-size: 15px;
+  color: #FF8C1A;
+  border: 1px solid #3a3a37;
+  overflow-x: auto;
+}
+
+.synthesis {
+  margin: 80px 0 40px;
+  padding: 48px;
+  background: linear-gradient(135deg, rgba(255, 140, 26, 0.08) 0%, rgba(255, 140, 26, 0.02) 100%);
+  border: 1px solid rgba(255, 140, 26, 0.3);
+  border-radius: 20px;
+}
+.synthesis h2 { margin-top: 0; }
+.synthesis-pills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  background: rgba(255, 140, 26, 0.15);
+  color: #FF8C1A;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 140, 26, 0.3);
+}
+
+.toc {
+  background: #2D2D2A;
+  border: 1px solid #3a3a37;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin: 40px 0;
+}
+.toc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #FF8C1A;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.toc ol {
+  list-style: none;
+  counter-reset: toc;
+}
+.toc li {
+  counter-increment: toc;
+  padding: 8px 0;
+  color: #C8C5BD;
+  font-size: 15px;
+}
+.toc li::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #FF8C1A;
+  margin-right: 16px;
+}
+
+.footer-note {
+  font-size: 13px;
+  color: #777;
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid #3a3a37;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 700px) {
+  h1 { font-size: 38px; }
+  h2 { font-size: 28px; }
+  .lead { font-size: 19px; }
+  .container { padding: 40px 20px; }
+  .synthesis { padding: 28px; }
+  .metric-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .metric { padding: 16px; }
+  .metric-value { font-size: 28px; }
+  table { font-size: 13px; }
+  th, td { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="eyebrow">Análisis · Modelo financiero</div>
+<h1>El modelo Saylor, explicado de raíz</h1>
+
+<div class="meta-bar">
+  <span><span class="dot"></span>STRC · Strategy Inc.</span>
+  <span>Abril 2026</span>
+  <span>Lectura: 15 min</span>
+</div>
+
+<p class="lead">¿Cómo es posible que una empresa pida prestados miles de millones de dólares prometiendo pagar un dividendo del 10% anual <em>para siempre</em>, sin nunca devolver el capital, y aun así no quebrar? Este documento explica la matemática detrás del modelo de Michael Saylor con dibujos, ejemplos concretos y los números oficiales de la propia compañía.</p>
+
+<div class="toc">
+  <div class="toc-label">Lo que vamos a entender</div>
+  <ol>
+    <li>Qué es exactamente STRC y por qué es tan particular</li>
+    <li>Los tres tipos de crédito según Mises</li>
+    <li>Cómo Strategy convierte ahorros en Bitcoin</li>
+    <li>El concepto clave: BTC Breakeven ARR (2.05%)</li>
+    <li>Por qué la depreciación del dólar es esencial</li>
+    <li>El verdadero riesgo del modelo</li>
+  </ol>
+</div>
+
+<hr class="divider">
+
+<h2>1. La pieza central: STRC</h2>
+
+<p>STRC son las siglas de <strong>Stretch Preferred Stock</strong>. Es una acción preferente perpetua emitida por Strategy (la empresa antes conocida como MicroStrategy) que cotiza en Nasdaq cerca de los 100 USD. Paga un dividendo mensual del <strong>10% anualizado</strong>.</p>
+
+<p>Pero "acción preferente perpetua" suena complicado. En realidad es algo bien específico que vale la pena descomponer.</p>
+
+<div class="numbered">
+  <div class="num-badge">1</div>
+  <div class="num-content">
+    <h4>Es una acción, no un bono</h4>
+    <p>Aunque pague un dividendo fijo como un bono, técnicamente es equity. Esto significa que Strategy no tiene la obligación legal estricta de pagar — el dividendo es discrecional del directorio.</p>
+  </div>
+</div>
+
+<div class="numbered">
+  <div class="num-badge">2</div>
+  <div class="num-content">
+    <h4>Es perpetua: nunca vence</h4>
+    <p>Strategy <em>nunca</em> tiene que devolver los 100 USD del valor nominal. Usted compra STRC y recibe dividendos para siempre — pero si quiere recuperar su capital, debe vendérselo a otra persona en el mercado, no a Strategy.</p>
+  </div>
+</div>
+
+<div class="numbered">
+  <div class="num-badge">3</div>
+  <div class="num-content">
+    <h4>Es preferente sobre las acciones comunes</h4>
+    <p>Si Strategy tiene problemas, los tenedores de STRC cobran antes que los accionistas de MSTR (la acción común). Eso da una capa extra de seguridad.</p>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">El secreto del modelo</div>
+  <p>STRC combina lo mejor de dos mundos para Strategy: capta capital como si fuera deuda (dividendo fijo predecible para el inversionista), pero contablemente y legalmente es equity (sin obligación de devolver, sin riesgo de default técnico).</p>
+</div>
+
+<hr class="divider">
+
+<h2>2. ¿Qué tipo de crédito es esto?</h2>
+
+<p>Para entender el modelo Saylor a fondo, conviene volver a la teoría económica clásica. Ludwig von Mises, en <em>La Acción Humana</em>, distingue dos tipos fundamentales de crédito:</p>
+
+<div class="svg-container">
+<svg viewBox="0 0 800 480" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M0,0 L10,5 L0,10 z" fill="#FF8C1A"/>
+</marker>
+<marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M0,0 L10,5 L0,10 z" fill="#DC5050"/>
+</marker>
+</defs>
+
+<text x="400" y="32" text-anchor="middle" fill="#F5F3ED" font-family="Fraunces" font-size="20" font-weight="500">Los dos tipos de crédito según Mises</text>
+
+<rect x="40" y="70" width="340" height="170" rx="12" fill="rgba(80, 200, 140, 0.08)" stroke="#50C88C" stroke-width="1"/>
+<text x="60" y="98" fill="#50C88C" font-family="JetBrains Mono" font-size="11" letter-spacing="1">CRÉDITO-MERCANCÍA</text>
+<text x="60" y="124" fill="#F5F3ED" font-family="Inter" font-size="15" font-weight="500">Origen: ahorro real previo</text>
+
+<rect x="60" y="148" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#50C88C" stroke-width="0.5"/>
+<text x="110" y="172" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Ahorrador</text>
+<text x="110" y="188" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">No consume</text>
+
+<line x1="165" y1="173" x2="255" y2="173" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arr1)"/>
+<text x="210" y="165" text-anchor="middle" fill="#FF8C1A" font-family="Inter" font-size="11">capital real</text>
+
+<rect x="260" y="148" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#50C88C" stroke-width="0.5"/>
+<text x="310" y="172" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Prestatario</text>
+<text x="310" y="188" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">Recibe</text>
+
+<text x="60" y="220" fill="#888" font-family="Inter" font-size="12">Ejemplo: préstamo entre particulares con</text>
+<text x="60" y="234" fill="#888" font-family="Inter" font-size="12">dinero verdaderamente ahorrado</text>
+
+<rect x="420" y="70" width="340" height="170" rx="12" fill="rgba(220, 80, 80, 0.08)" stroke="#DC5050" stroke-width="1"/>
+<text x="440" y="98" fill="#DC5050" font-family="JetBrains Mono" font-size="11" letter-spacing="1">CRÉDITO-CIRCULATORIO</text>
+<text x="440" y="124" fill="#F5F3ED" font-family="Inter" font-size="15" font-weight="500">Origen: creado de la nada</text>
+
+<rect x="440" y="148" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#DC5050" stroke-width="0.5"/>
+<text x="490" y="172" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Banco</text>
+<text x="490" y="188" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">Reserva fraccionaria</text>
+
+<line x1="545" y1="173" x2="635" y2="173" stroke="#DC5050" stroke-width="1.5" marker-end="url(#arr2)"/>
+<text x="590" y="165" text-anchor="middle" fill="#DC5050" font-family="Inter" font-size="11">dinero inventado</text>
+
+<rect x="640" y="148" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#DC5050" stroke-width="0.5"/>
+<text x="690" y="172" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Prestatario</text>
+<text x="690" y="188" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">Gasta cupo</text>
+
+<text x="440" y="220" fill="#888" font-family="Inter" font-size="12">Ejemplo: tarjeta de crédito,</text>
+<text x="440" y="234" fill="#888" font-family="Inter" font-size="12">hipoteca con reserva fraccionaria</text>
+
+<rect x="40" y="280" width="720" height="170" rx="12" fill="rgba(255, 140, 26, 0.08)" stroke="#FF8C1A" stroke-width="1"/>
+<text x="60" y="308" fill="#FF8C1A" font-family="JetBrains Mono" font-size="11" letter-spacing="1">EL CASO SAYLOR</text>
+<text x="60" y="334" fill="#F5F3ED" font-family="Inter" font-size="15" font-weight="500">Crédito-mercancía con destino bitcoinizado</text>
+
+<rect x="60" y="358" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#FF8C1A" stroke-width="0.5"/>
+<text x="110" y="382" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Ahorrador</text>
+<text x="110" y="398" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">Compra STRC</text>
+
+<line x1="165" y1="383" x2="255" y2="383" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arr1)"/>
+<text x="210" y="375" text-anchor="middle" fill="#FF8C1A" font-family="Inter" font-size="11">USD ahorrado</text>
+
+<rect x="260" y="358" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#FF8C1A" stroke-width="0.5"/>
+<text x="310" y="382" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Strategy</text>
+<text x="310" y="398" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">Recibe</text>
+
+<line x1="365" y1="383" x2="455" y2="383" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arr1)"/>
+<text x="410" y="375" text-anchor="middle" fill="#FF8C1A" font-family="Inter" font-size="11">convierte</text>
+
+<rect x="460" y="358" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#FF8C1A" stroke-width="0.5"/>
+<text x="510" y="378" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Tesorería</text>
+<text x="510" y="396" text-anchor="middle" fill="#FF8C1A" font-family="Inter" font-size="13" font-weight="600">BTC</text>
+
+<line x1="565" y1="383" x2="655" y2="383" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arr1)"/>
+<text x="610" y="375" text-anchor="middle" fill="#FF8C1A" font-family="Inter" font-size="11">colateral</text>
+
+<rect x="660" y="358" width="100" height="50" rx="8" fill="#1f1f1d" stroke="#FF8C1A" stroke-width="0.5"/>
+<text x="710" y="378" text-anchor="middle" fill="#F5F3ED" font-family="Inter" font-size="13" font-weight="500">Dividendo</text>
+<text x="710" y="396" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">10% anual</text>
+</svg>
+<div class="svg-caption">Strategy hace crédito-mercancía: hay ahorro real detrás (no creación bancaria)</div>
+</div>
+
+<p>Aquí surge la primera observación importante: <strong>quien emite el crédito en realidad es el ahorrador, no Strategy</strong>. El ahorrador es quien restringe consumo y aporta capital real. Strategy emite el <em>instrumento</em> (la acción preferente), pero el crédito como fenómeno económico nace del ahorro.</p>
+
+<hr class="divider">
+
+<h2>3. La mecánica completa, paso a paso</h2>
+
+<p>Imaginemos que usted invierte 100,000 USD en STRC. Vamos a ver qué pasa exactamente con su dinero.</p>
+
+<div class="svg-container">
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arrFlow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M0,0 L10,5 L0,10 z" fill="#FF8C1A"/>
+</marker>
+</defs>
+
+<text x="400" y="32" text-anchor="middle" fill="#F5F3ED" font-family="Fraunces" font-size="20" font-weight="500">El flujo del capital paso a paso</text>
+
+<circle cx="80" cy="100" r="22" fill="#FF8C1A"/>
+<text x="80" y="106" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">1</text>
+<rect x="120" y="78" width="640" height="44" rx="8" fill="#2D2D2A" stroke="#3a3a37"/>
+<text x="140" y="98" fill="#F5F3ED" font-family="Inter" font-size="14" font-weight="500">Usted compra STRC en Nasdaq</text>
+<text x="140" y="114" fill="#888" font-family="Inter" font-size="12">Entrega 100,000 USD ahorrados → recibe 1,000 acciones STRC a 100 USD c/u</text>
+
+<line x1="80" y1="125" x2="80" y2="155" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arrFlow)"/>
+
+<circle cx="80" cy="180" r="22" fill="#FF8C1A"/>
+<text x="80" y="186" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">2</text>
+<rect x="120" y="158" width="640" height="44" rx="8" fill="#2D2D2A" stroke="#3a3a37"/>
+<text x="140" y="178" fill="#F5F3ED" font-family="Inter" font-size="14" font-weight="500">Strategy recibe los USD</text>
+<text x="140" y="194" fill="#888" font-family="Inter" font-size="12">El capital ingresa a tesorería como pasivo perpetuo (nunca se devuelve)</text>
+
+<line x1="80" y1="205" x2="80" y2="235" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arrFlow)"/>
+
+<circle cx="80" cy="260" r="22" fill="#FF8C1A"/>
+<text x="80" y="266" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">3</text>
+<rect x="120" y="238" width="640" height="44" rx="8" fill="#2D2D2A" stroke="#3a3a37"/>
+<text x="140" y="258" fill="#F5F3ED" font-family="Inter" font-size="14" font-weight="500">Strategy compra Bitcoin con esos USD</text>
+<text x="140" y="274" fill="#888" font-family="Inter" font-size="12">100,000 USD se convierten en BTC al precio spot del momento</text>
+
+<line x1="80" y1="285" x2="80" y2="315" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arrFlow)"/>
+
+<circle cx="80" cy="340" r="22" fill="#FF8C1A"/>
+<text x="80" y="346" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">4</text>
+<rect x="120" y="318" width="640" height="44" rx="8" fill="#2D2D2A" stroke="#3a3a37"/>
+<text x="140" y="338" fill="#F5F3ED" font-family="Inter" font-size="14" font-weight="500">El BTC entra al colchón de tesorería</text>
+<text x="140" y="354" fill="#888" font-family="Inter" font-size="12">Se suma a las 780,000+ BTC ya en balance, sin venderse jamás</text>
+
+<line x1="80" y1="365" x2="80" y2="395" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arrFlow)"/>
+
+<circle cx="80" cy="420" r="22" fill="#FF8C1A"/>
+<text x="80" y="426" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">5</text>
+<rect x="120" y="398" width="640" height="44" rx="8" fill="#2D2D2A" stroke="#3a3a37"/>
+<text x="140" y="418" fill="#F5F3ED" font-family="Inter" font-size="14" font-weight="500">Strategy le paga dividendo mensual</text>
+<text x="140" y="434" fill="#888" font-family="Inter" font-size="12">10,000 USD/año = ~833 USD/mes en dividendos a su cuenta</text>
+
+<line x1="80" y1="445" x2="80" y2="475" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arrFlow)"/>
+
+<circle cx="80" cy="500" r="22" fill="#FF8C1A"/>
+<text x="80" y="506" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">6</text>
+<rect x="120" y="478" width="640" height="44" rx="8" fill="#2D2D2A" stroke="#3a3a37"/>
+<text x="140" y="498" fill="#F5F3ED" font-family="Inter" font-size="14" font-weight="500">¿De dónde sale ese dividendo?</text>
+<text x="140" y="514" fill="#888" font-family="Inter" font-size="12">De la apreciación del BTC, emisión de más STRC, o venta de equity común</text>
+
+<line x1="80" y1="525" x2="80" y2="555" stroke="#FF8C1A" stroke-width="1.5" marker-end="url(#arrFlow)"/>
+
+<circle cx="80" cy="580" r="22" fill="#50C88C"/>
+<text x="80" y="586" text-anchor="middle" fill="#1a1a18" font-family="JetBrains Mono" font-size="14" font-weight="600">∞</text>
+<rect x="120" y="558" width="640" height="34" rx="8" fill="rgba(80, 200, 140, 0.08)" stroke="#50C88C" stroke-width="1"/>
+<text x="140" y="580" fill="#50C88C" font-family="Inter" font-size="14" font-weight="500">Esto se repite mes tras mes, perpetuamente</text>
+</svg>
+<div class="svg-caption">El ciclo perpetuo: Strategy nunca devuelve el capital, solo paga el dividendo</div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Pregunta natural</div>
+  <p>Si Strategy paga 10% anual y nunca devuelve capital, ¿de dónde saca el dinero para pagar? Aquí entra el concepto que cambia todo.</p>
+</div>
+
+<hr class="divider">
+
+<h2>4. El concepto clave: BTC Breakeven ARR</h2>
+
+<p>Strategy publica oficialmente una métrica llamada <strong>BTC Breakeven ARR</strong>: la tasa anual mínima a la que Bitcoin debe apreciarse para que la empresa pueda pagar todos sus dividendos preferentes para siempre, sin tener que emitir nuevas acciones MSTR.</p>
+
+<div class="formula">
+BTC Breakeven ARR = (Dividendos anuales + Intereses) ÷ Valor de mercado de la tesorería BTC
+</div>
+
+<p>Veamos los números reales de Strategy a abril de 2026:</p>
+
+<div class="metric-grid">
+  <div class="metric">
+    <div class="metric-label">Tesorería</div>
+    <div class="metric-value">766,970</div>
+    <div class="metric-sub">BTC en balance</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Valor de mercado</div>
+    <div class="metric-value">$54.6 B</div>
+    <div class="metric-sub">USD en BTC</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Obligaciones anuales</div>
+    <div class="metric-value">$1.12 B</div>
+    <div class="metric-sub">dividendos + intereses</div>
+  </div>
+  <div class="metric highlight">
+    <div class="metric-label">Breakeven ARR</div>
+    <div class="metric-value">2.05%</div>
+    <div class="metric-sub">apreciación mínima de BTC</div>
+  </div>
+</div>
+
+<p>Despejando la fórmula:</p>
+
+<div class="formula">
+1.12 B ÷ 54.6 B = 0.0205 = <span style="color: #FFB84A;">2.05%</span>
+</div>
+
+<div class="success">
+  <div class="callout-label">Lo que esto significa en términos sencillos</div>
+  <p>Si Bitcoin sube en promedio <strong>apenas 2.05% al año</strong>, Strategy puede pagar todos los dividendos prometidos a perpetuidad usando solo la apreciación del colateral. No necesita vender BTC, no necesita emitir más acciones, no necesita generar utilidad operativa.</p>
+</div>
+
+<p>Para poner ese 2.05% en perspectiva, comparémoslo con datos reales:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Referencia</th>
+  <th class="num">Tasa anual</th>
+  <th>vs Breakeven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>BTC Breakeven ARR de Strategy</td>
+  <td class="num">2.05%</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>Inflación USD (CAGR 20 años)</td>
+  <td class="num">2.59%</td>
+  <td class="good">Cubre breakeven sin esfuerzo</td>
+</tr>
+<tr>
+  <td>Bonos del Tesoro 10 años</td>
+  <td class="num">~4.5%</td>
+  <td class="good">Más del doble del breakeven</td>
+</tr>
+<tr>
+  <td>S&P 500 (CAGR 30 años)</td>
+  <td class="num">~10%</td>
+  <td class="good">5x el breakeven</td>
+</tr>
+<tr>
+  <td>BTC histórico (5 años)</td>
+  <td class="num">~38%</td>
+  <td class="good">19x el breakeven</td>
+</tr>
+<tr>
+  <td>Tesis Saylor (próximos 20 años)</td>
+  <td class="num">30%</td>
+  <td class="good">15x el breakeven</td>
+</tr>
+</tbody>
+</table>
+
+<p>El breakeven de Strategy <em>está por debajo incluso de la propia inflación oficial del dólar</em>. Esto significa que cualquier activo escaso —oro, inmuebles, acciones promedio— supera ese umbral matemáticamente.</p>
+
+<hr class="divider">
+
+<h2>5. La sobrecolateralización: 50 años de cobertura</h2>
+
+<p>El otro lado de la métrica oficial es el <strong>"Years of Coverage"</strong>: cuántos años puede pagar dividendos asumiendo que Bitcoin no se aprecia en absoluto y que solo va vendiendo de la tesorería para cubrir.</p>
+
+<div class="metric-grid">
+  <div class="metric success">
+    <div class="metric-label">Años de cobertura</div>
+    <div class="metric-value">48.7</div>
+    <div class="metric-sub">a tasa actual de pago</div>
+  </div>
+  <div class="metric success">
+    <div class="metric-label">Ratio sobrecolateralización</div>
+    <div class="metric-value">~50:1</div>
+    <div class="metric-sub">BTC vs obligaciones anuales</div>
+  </div>
+</div>
+
+<p>En palabras simples: <strong>aunque Bitcoin se quedara estancado en su precio actual durante medio siglo</strong>, Strategy podría seguir pagando dividendos vendiendo gradualmente partes de su tesorería. Esto sin contar emisiones nuevas ni apreciación.</p>
+
+<div class="svg-container">
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+<text x="400" y="32" text-anchor="middle" fill="#F5F3ED" font-family="Fraunces" font-size="20" font-weight="500">Sobrecolateralización visualizada</text>
+
+<rect x="60" y="80" width="680" height="60" rx="8" fill="rgba(255, 140, 26, 0.15)" stroke="#FF8C1A" stroke-width="1"/>
+<text x="80" y="105" fill="#FF8C1A" font-family="JetBrains Mono" font-size="11" letter-spacing="1">TESORERÍA BITCOIN</text>
+<text x="80" y="128" fill="#F5F3ED" font-family="Fraunces" font-size="22" font-weight="500">$54.6 mil millones</text>
+
+<rect x="60" y="170" width="14" height="60" rx="3" fill="rgba(220, 80, 80, 0.4)" stroke="#DC5050" stroke-width="0.5"/>
+<text x="90" y="195" fill="#DC5050" font-family="JetBrains Mono" font-size="11" letter-spacing="1">OBLIGACIÓN ANUAL</text>
+<text x="90" y="218" fill="#F5F3ED" font-family="Fraunces" font-size="22" font-weight="500">$1.12 mil millones</text>
+
+<text x="400" y="265" text-anchor="middle" fill="#888" font-family="JetBrains Mono" font-size="12">↑ tesorería</text>
+<text x="400" y="285" text-anchor="middle" fill="#888" font-family="JetBrains Mono" font-size="12">↓ obligación de un año</text>
+<text x="400" y="305" text-anchor="middle" fill="#FF8C1A" font-family="Fraunces" font-size="16" font-style="italic">Casi 50 veces más colateral que deuda anual</text>
+</svg>
+<div class="svg-caption">La diferencia de escala es lo que hace al modelo casi indestructible</div>
+</div>
+
+<hr class="divider">
+
+<h2>6. La paradoja austriaca: Saylor necesita la inflación</h2>
+
+<p>Aquí llegamos al punto más interesante desde una óptica austriaca. El modelo de Saylor parece atacar al sistema fiat, pero en realidad <em>depende</em> de él para funcionar.</p>
+
+<div class="warning">
+  <div class="callout-label">La paradoja</div>
+  <p>Strategy paga su dividendo en dólares. Si el dólar no se depreciara, el costo real de pagar 10% anual sería brutal y el modelo colapsaría. La inflación es lo que hace que el dividendo prometido sea cada vez más barato en términos reales.</p>
+</div>
+
+<p>Veámoslo con números concretos. Usted invierte 100,000 USD hoy. A 5 años, esto es lo que recibe en términos reales:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Concepto</th>
+  <th class="num">A los 5 años</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Capital nominal recibido (10% reinvertido)</td>
+  <td class="num">$161,051</td>
+</tr>
+<tr>
+  <td>Inflación acumulada (2.59% CAGR)</td>
+  <td class="num warn">-$19,210</td>
+</tr>
+<tr>
+  <td><strong>Poder adquisitivo real</strong></td>
+  <td class="num good">$141,841</td>
+</tr>
+<tr>
+  <td>Rendimiento real anual</td>
+  <td class="num good">7.22%</td>
+</tr>
+</tbody>
+</table>
+
+<p>Para usted como inversionista, eso sigue siendo un buen retorno. Para Strategy, esa inflación del 2.59% que le come 19,210 USD a usted, le ahorra a Strategy exactamente lo mismo en términos reales.</p>
+
+<h3>¿Qué pasaría en un mundo de dinero duro?</h3>
+
+<p>Imaginemos un escenario hipotético: patrón Bitcoin global, sin inflación. ¿Funcionaría el modelo Saylor?</p>
+
+<div class="warning">
+  <div class="callout-label">El escenario que rompe el modelo</div>
+  <p>En un mundo sin debasement monetario, Bitcoin dejaría de apreciarse contra la unidad de cuenta. Sin esa apreciación, no habría fuente para pagar el dividendo. Strategy tendría que generar producción real para sostenerse, como cualquier empresa. <strong>Su modelo es estructuralmente parasitario del sistema que critica.</strong></p>
+</div>
+
+<hr class="divider">
+
+<h2>7. El verdadero riesgo del modelo</h2>
+
+<p>Si Bitcoin solo necesita apreciarse 2.05% anual y la sobrecolateralización es 50:1, ¿dónde está el riesgo? Existe, pero no donde uno esperaría.</p>
+
+<div class="numbered">
+  <div class="num-badge">A</div>
+  <div class="num-content">
+    <h4>Caída prolongada y profunda de Bitcoin</h4>
+    <p>El verdadero peligro no es que BTC se aprecie poco — es que <em>caiga mucho</em> y se quede ahí varios años. Una caída del 70% sostenida durante 5 años haría que el valor de la tesorería bajara dramáticamente, mientras los dividendos siguen acumulándose.</p>
+  </div>
+</div>
+
+<div class="numbered">
+  <div class="num-badge">B</div>
+  <div class="num-content">
+    <h4>Cierre de mercados de capital</h4>
+    <p>Cuando le preguntan a Saylor qué pasa si BTC cae fuerte, responde "refinanciamos la deuda". Pero esa capacidad depende de que Wall Street siga prestándole. En un mercado bajista severo, ese acceso podría cerrarse.</p>
+  </div>
+</div>
+
+<div class="numbered">
+  <div class="num-badge">C</div>
+  <div class="num-content">
+    <h4>Cambio regulatorio</h4>
+    <p>STRC está en un limbo regulatorio. Si la SEC u otra autoridad lo reclasifica o restringe, el modelo de captación de capital de Strategy podría sufrir un golpe estructural.</p>
+  </div>
+</div>
+
+<div class="numbered">
+  <div class="num-badge">D</div>
+  <div class="num-content">
+    <h4>Suspensión de dividendos</h4>
+    <p>Como STRC permite suspender dividendos sin default, Strategy técnicamente nunca quiebra. Pero si suspende, el precio del equity común (MSTR) colapsa y la confianza institucional desaparece. Sería una "muerte de imagen" más que una quiebra contable.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<h2>8. Comparación con alternativas tradicionales</h2>
+
+<p>Para cerrar, comparemos STRC contra otras opciones de renta para un inversionista:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Instrumento</th>
+  <th class="num">Yield nominal</th>
+  <th class="num">Yield real (post-inflación)</th>
+  <th>Riesgo principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Cuenta bancaria de ahorros</td>
+  <td class="num">~0.5%</td>
+  <td class="num bad">-2.1%</td>
+  <td>Pérdida silenciosa por inflación</td>
+</tr>
+<tr>
+  <td>Money Market Fund</td>
+  <td class="num">~4.5%</td>
+  <td class="num warn">+1.9%</td>
+  <td>Tasa variable, sigue al fed</td>
+</tr>
+<tr>
+  <td>Bonos Tesoro 10 años</td>
+  <td class="num">~4.5%</td>
+  <td class="num warn">+1.9%</td>
+  <td>Riesgo de duración, default soberano</td>
+</tr>
+<tr>
+  <td>Bono corporativo grado inversión</td>
+  <td class="num">~6%</td>
+  <td class="num good">+3.4%</td>
+  <td>Crédito corporativo, default</td>
+</tr>
+<tr>
+  <td><strong>STRC (Strategy)</strong></td>
+  <td class="num">10-11.5%</td>
+  <td class="num good">+7.2%-8.7%</td>
+  <td>BTC bajista prolongado, suspensión</td>
+</tr>
+<tr>
+  <td>Holding directo de BTC</td>
+  <td class="num">0% (cash flow)</td>
+  <td class="num">Solo apreciación</td>
+  <td>Volatilidad extrema</td>
+</tr>
+</tbody>
+</table>
+
+<p>STRC se posiciona en un nicho específico: <strong>el inversionista que quiere exposición indirecta a Bitcoin pero prefiere cash flow estable a apreciación volátil</strong>. No es para reemplazar Bitcoin en un portafolio, es para complementarlo o para inversionistas conservadores que no soportarían la volatilidad de BTC directo.</p>
+
+<div class="synthesis">
+<h2 style="color: #FF8C1A;">Síntesis</h2>
+
+<div class="synthesis-pills">
+  <span class="pill">Uno · Perpetuidad</span>
+  <span class="pill">Dos · Breakeven 2.05%</span>
+  <span class="pill">Tres · Sobrecolateralización 50:1</span>
+</div>
+
+<p>El modelo Saylor funciona por la combinación de tres mecanismos que se refuerzan mutuamente:</p>
+
+<p><strong>Uno.</strong> La perpetuidad elimina el riesgo de devolución de capital. Strategy nunca tiene que repagar los 100 USD de cada STRC.</p>
+
+<p><strong>Dos.</strong> El BTC Breakeven ARR de 2.05% es estructuralmente bajo. Cualquier apreciación nominal de Bitcoin superior a la inflación oficial cubre el modelo perpetuamente.</p>
+
+<p><strong>Tres.</strong> La sobrecolateralización 50:1 da casi medio siglo de cobertura ante el peor escenario nominal.</p>
+
+<p style="margin-top: 32px; font-family: 'Fraunces', serif; font-size: 19px; font-style: italic; color: #F5F3ED;">Saylor no inventó un nuevo tipo de crédito. Inventó una forma elegante de capturar el diferencial entre un sistema fiat que se degrada y un activo escaso que se aprecia. El modelo es brillante mientras esa asimetría exista.</p>
+</div>
+
+<div class="footer-note">
+Datos oficiales: Strategy Inc. dashboard a abril 13, 2026 · 766,970 BTC · BTC NAV $54.617B · Breakeven ARR 2.05% · 48.7 años de cobertura · Inflación USD CAGR 2006-2025: 2.59% (BLS CPI-U)
+</div>
+
+</div>
+</body>
+</html>
